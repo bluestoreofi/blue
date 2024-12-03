@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gracias por tu compra</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            text-align: center;
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.5);
+        }
+        #container {
+            position: relative;
+            z-index: 1;
+            padding: 40px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            max-width: 600px;
+            margin: 50px auto;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow-y: auto;
+            max-height: 80vh; 
+        }
+        #container:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+        }
+        img {
+            width: 100%;
+            max-width: 200px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        h1 {
+            color: #00BFFF; 
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            letter-spacing: 1px;
+        }
+        p {
+            margin: 10px 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        .password-label {
+            color: #FFD700; 
+            font-weight: bold;
+        }
+        input[type="password"] {
+            padding: 12px;
+            border: 2px solid #00BFFF; 
+            border-radius: 5px;
+            margin: 10px 0;
+            width: 80%;
+            font-size: 1em;
+            transition: box-shadow 0.3s, border-color 0.3s;
+        }
+        input[type="password"]:focus {
+            box-shadow: 0 0 8px rgba(0, 183, 255, 0.7);
+            outline: none;
+            border-color: #FFD700; 
+        }
+        button {
+            padding: 12px 25px;
+            background-color: #007BFF; 
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+        }
+        .hidden {
+            display: none;
+        }
+        .content-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(10px);
+            opacity: 0;
+        }
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+        }
+        .modal-content {
+            background-color: #fff;
+            color: #000;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+        .modal-header {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #007BFF;
+            font-weight: bold;
+        }
+        .modal-body p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        .modal-footer {
+            text-align: right;
+        }
+        .modal-footer button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            margin-left: 10px;
+        }
+        .modal-footer button.accept {
+            background-color: #28a745; 
+            color: #fff;
+        }
+        .modal-footer button.cancel {
+            background-color: #dc3545; 
+            color: #fff;
+        }
+        a {
+            color: #FFD700; 
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.9em; /* Tamaño más pequeño */
+        }
+        a:hover {
+            color: #ffcc00;
+            text-decoration: underline;
+        }
+        .copy-button {
+            background: transparent;
+            border: none;
+            color: #FFD700;
+            font-size: 0.8em; /* Tamaño más pequeño */
+            cursor: pointer;
+            padding: 0;
+            margin-left: 5px;
+        }
+        .notification {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 215, 0, 0.8);
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: opacity 0.5s;
+        }
+        .video-container {
+            margin-top: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 315px; /* Altura del iframe */
+            border: none; /* Sin borde */
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Sombra */
+        }
+    </style>
+</head>
+<body>
+    <video autoplay loop muted>
+        <source src="https://cdn.pixabay.com/video/2022/02/13/107663-678971129_large.mp4" type="video/mp4">
+        Tu navegador no soporta el video.
+    </video>
+    
+    <div id="container">
+        <img src="https://cdn.leonardo.ai/users/8f501513-8b0f-4506-a874-e7b28d229434/generations/7977cc93-f6b9-4b4a-bde9-ab31b8a9d819/Leonardo_Phoenix_Cree_un_logo_vibrante_para_Blue_Store_con_un_0.jpg?w=512" alt="Logo de Blue Store">
+        <h1>¡Gracias por tu compra!</h1>
+        <p>Estamos procesando tu pedido. A continuación, ingresa tu contraseña para acceder al contenido.</p>
+        <p><span class="password-label">Tu contraseña es:</span> <span style="color: #FFD700;">02147</span>. Por favor, ingrésala a continuación:</p>
+        <input type="password" id="password" placeholder="Ingresa tu contraseña" />
+        <button onclick="checkPassword()">Acceder</button>
+
+        <div id="content" class="hidden content-section">
+            <h2>🎮 Entrega de Cuenta de Minecraft FA (Full Access)</h2>
+            <p><strong>¡Gracias por tu compra! 🎉</strong></p>
+            <p>A continuación, encontrarás la información necesaria para acceder a tu cuenta.</p>
+            <img src="https://cdn.leonardo.ai/users/46932ec1-f5df-4c7d-81e6-574833a7aefc/generations/af32a879-c34d-4008-947b-43da9e68e303/Leonardo_Phoenix_Crea_un_fondo_vibrante_con_un_degradado_en_to_1.jpg?w=512" alt="Contenido" />
+            <hr>
+            <p><strong>Código de Compra:</strong> 🛒 MC-02147</p>
+            <p><strong>Correo:</strong> <span id="email">📧 bluestorecapacherryggblue14@outlook.com</span>
+                <button class="copy-button" onclick="copyToClipboard('bluestorecapacherryggblue14@outlook.com', 'notification-email')">Copiar</button>
+                <span class="notification" id="notification-email">¡Copiado!</span>
+            </p>
+            <p><strong>Código de Seguridad:</strong> <span id="security-code">🔐 8KRQ4-8TLS8-BN47P-RZEUE-FL8KC</span>
+                <button class="copy-button" onclick="copyToClipboard('8KRQ4-8TLS8-BN47P-RZEUE-FL8KC', 'notification-security')">Copiar</button>
+                <span class="notification" id="notification-security">¡Copiado!</span>
+            </p>
+            <hr>
+            <p>🔑 Para completar el proceso, sigue estos pasos:</p>
+            <ol>
+                <li>Ingresa a: <a href="https://microsoft.com/" target="_blank">https://microsoft.com/</a></li>
+                <li>Introduce el correo proporcionado y selecciona "¿Olvidaste tu contraseña?".</li>
+                <li>Indica que no tienes ningún método de verificación y sigue las instrucciones para introducir el código de seguridad.</li>
+                <li>Se cerrará sesión automáticamente; vuelve a iniciar sesión con el mismo correo y tu nueva contraseña.</li>
+                <li>Cambia toda la información personal asociada a la cuenta para asegurarla al máximo.</li>
+            </ol>
+            <p>🛡️ Instrucciones Adicionales: Deja un vouch en nuestro Discord de Blue Store en la sección ✅・vouches para garantizar tu compra.</p>
+            <p>Para cualquier duda o asistencia, no dudes en contactarnos a través de nuestro Discord: <a href="https://discord.gg/5kjW4HXU3n">Discord de Blue Store</a>.</p>
+
+            <div class="video-container">
+                <h3>🎦 Video Explicativo</h3>
+                <iframe src="https://drive.google.com/file/d/1829sNYUujcwYwWRGQRRSJOsHE28OaxqU/preview" allowfullscreen></iframe>
+            </div>
+            <p>🌟 ¡Gracias por elegir Blue Store! ¡Que disfrutes tu experiencia en Minecraft! 🌟</p>
+        </div>
+    </div>
+
+    <!-- Modal para Condiciones de Garantía -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Condiciones de Garantía</div>
+            <div class="modal-body">
+                <p><strong>Bloqueo de Cuenta:</strong> Si su cuenta de Microsoft se bloquea dentro de los <strong>7 días</strong> posteriores a la compra, puede solicitar un reembolso abriendo un ticket.</p>
+                <p><strong>Responsabilidad:</strong> Pasados los <strong>7 días</strong>, la responsabilidad recae completamente en el usuario.</p>
+                <p><strong>Cambio de Correo Alias:</strong> La garantía se anula si se modifica el correo alias.</p>
+                <p><strong>Cobertura:</strong> La garantía solo cubre bloqueos de cuenta; otros problemas quedan fuera.</p>
+                <p><strong>Términos:</strong> Los términos pueden actualizarse en cualquier momento. Al realizar la compra, acepta estas condiciones.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="accept" onclick="acceptConditions()">Aceptar</button>
+                <button class="cancel" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const passwordInput = document.getElementById('password').value;
+            const correctPassword = '02147'; 
+            const modal = document.getElementById('modal');
+
+            if (passwordInput === correctPassword) {
+                modal.style.display = "block"; 
+            } else {
+                alert('Contraseña incorrecta. Inténtalo de nuevo.');
+            }
+        }
+
+        function acceptConditions() {
+            const modal = document.getElementById('modal');
+            modal.style.display = "none";
+            const contentSection = document.getElementById('content');
+            contentSection.classList.remove('hidden');
+            contentSection.classList.add('visible'); 
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = "none"; 
+        }
+
+        function copyToClipboard(text, notificationId) {
+            navigator.clipboard.writeText(text).then(() => {
+                const notification = document.getElementById(notificationId);
+                notification.style.display = 'block';
+                notification.style.opacity = 1;
+                setTimeout(() => {
+                    notification.style.opacity = 0;
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 500);
+                }, 1000);
+            }).catch(err => {
+                console.error('Error al copiar: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
